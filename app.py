@@ -13,7 +13,7 @@ from gprofiler import GProfiler
 # PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="MohanOmics Analyzer",
+    page_title="Jahan BioOmics Analyzer",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -83,7 +83,7 @@ def run_pathway_enrichment(gene_list, organism='mmusculus'):
 # -----------------------------------------------------------------------------
 # SIDEBAR
 # -----------------------------------------------------------------------------
-st.sidebar.title("🧬 MohanOmics")
+st.sidebar.title("🧬 Jahan BioOmics")
 st.sidebar.info("v3.5 - Golden Match")
 st.sidebar.markdown("---")
 st.sidebar.subheader("1. Data Import")
@@ -93,7 +93,7 @@ DEFAULT_PATH = r"D:\Project\Mohan\Jen\Software\20250728_112202_20250728_RMohan_m
 # -----------------------------------------------------------------------------
 # MAIN LOGIC
 # -----------------------------------------------------------------------------
-st.title("🧬 MohanOmics: Advanced Proteomics Suite")
+st.title("🧬 Jahan BioOmics: Advanced Proteomics Suite")
 st.markdown("### Interactive AI-Driven Analysis & Pathway Discovery")
 
 df = None
