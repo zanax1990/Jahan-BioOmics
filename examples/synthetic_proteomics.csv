@@ -1,0 +1,9 @@
+PG.ProteinAccessions,PG.Genes,PG.ProteinDescriptions,PG.Quantity,R.Condition,R.Replicate,PG.QValue (Run-Wise),PG.IsSingleHit
+P1,GENE1,Synthetic protein 1,4,A,1,0.001,FALSE
+P1,GENE1,Synthetic protein 1,5,A,2,0.001,FALSE
+P1,GENE1,Synthetic protein 1,16,B,1,0.002,FALSE
+P1,GENE1,Synthetic protein 1,20,B,2,0.002,FALSE
+P2,GENE2,Synthetic protein 2,8,A,1,0.001,FALSE
+P2,GENE2,Synthetic protein 2,8,A,2,0.001,FALSE
+P2,GENE2,Synthetic protein 2,8,B,1,0.001,FALSE
+P2,GENE2,Synthetic protein 2,8,B,2,0.001,FALSE
