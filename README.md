@@ -8,7 +8,7 @@ Jahan BioOmics is a Streamlit application for exploratory analysis of label-free
 2. Filter by run-wise q-value and optionally remove single-hit entries.
 3. Pivot protein quantities into a protein-by-sample matrix.
 4. Apply a log2 transform and choose KNN, minimum-value, or zero imputation.
-5. inspect PCA and sample-to-sample correlations.
+5. Inspect PCA and sample-to-sample correlations.
 6. Compare two conditions with Welch's t-test and an interactive volcano plot.
 7. Query GO Biological Process and KEGG enrichment through g:Profiler.
 
