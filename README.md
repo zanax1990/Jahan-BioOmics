@@ -1,69 +1,73 @@
-🧬 Jahan BioOmics
-Python Version Streamlit License Status
+# Jahan BioOmics
 
-Jahan BioOmics is a robust, interactive bioinformatics dashboard for end-to-end analysis of label-free DIA (Data-Independent Acquisition) proteomics data. Built with Python and Streamlit, it streamlines the workflow from raw report processing to biological interpretation.
+Jahan BioOmics is a Streamlit application for exploratory analysis of label-free DIA proteomics reports. It brings data import, quality filtering, missing-value handling, visualization, differential analysis, and pathway enrichment into one interactive workflow.
 
-Note: Optimized for mouse datasets (Mus musculus), with explicit handling for zero-variance edge cases.
+## Workflow
 
-🚀 Key Features
+1. Import a Spectronaut-style CSV or TSV report.
+2. Filter by run-wise q-value and optionally remove single-hit entries.
+3. Pivot protein quantities into a protein-by-sample matrix.
+4. Apply a log2 transform and choose KNN, minimum-value, or zero imputation.
+5. Inspect PCA and sample-to-sample correlations.
+6. Compare two conditions with Welch's t-test and an interactive volcano plot.
+7. Query GO Biological Process and KEGG enrichment through g:Profiler.
 
-🧹 Automated Quality Control
-Real-time Filtering: Adjust Q-Value thresholds dynamically.
-Data Cleaning: Option to remove single-hit proteins for higher confidence.
-Pivot Logic: Automatically transforms long-format reports into expression matrices.
+## Input data
 
-🤖 Imputation
-KNN Imputation: Uses k-Nearest Neighbors to fill missing values based on expression patterns.
-Fallback Methods: Options for "Min Value" or "Zero Fill" for comparison.
-Log2 Transformation: Includes infinity/NaN protection for stable downstream analysis.
+The application expects these columns:
 
-📊 Advanced Visualization
-Interactive PCA: 2D Principal Component Analysis with dynamic grouping.
-Correlation Heatmaps: Visualizes sample-to-sample reproducibility.
-Volcano Plots: Interactive scatter plots with adjustable Log2FC and P-value cutoffs.
+- `PG.ProteinAccessions`
+- `PG.Genes`
+- `PG.ProteinDescriptions`
+- `PG.Quantity`
+- `R.Condition`
+- `R.Replicate`
+- `PG.QValue (Run-Wise)` for q-value filtering
+- `PG.IsSingleHit` for optional single-hit filtering
 
-🧮 Statistics
-Welch’s T-Test: Fast, vectorized implementation for group comparisons.
-Edge Case Handling: Supports presence/absence scenarios where variance is zero in one or both groups.
+No research dataset is included in this repository.
 
-🧬 Biological Insight
-Pathway Enrichment: Integration with g:Profiler.
-Gene Ontology & KEGG: Fetches enriched terms for upregulated vs. downregulated sets.
+## Installation
 
-🛠 Installation
-
+```bash
 git clone https://github.com/zanax1990/Jahan-BioOmics.git
 cd Jahan-BioOmics
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+```
 
+On Windows, activate the environment with `.venv\Scripts\activate`.
 
-Usage
+## Usage
 
+```bash
 streamlit run app.py
+```
 
+Upload a report through the sidebar. For local development, an optional default dataset can be provided without editing the source:
 
-Dashboard opens at: http://localhost:8501
+```bash
+export BIOOMICS_DEFAULT_DATA=/path/to/report.csv
+streamlit run app.py
+```
 
-📂 Input Data Format
-Designed to parse Spectronaut DIA-style reports (CSV or TSV). Required columns:
+## Methods
 
-PG.ProteinAccessions
-PG.Genes
-PG.Quantity
-R.Condition
-R.Replicate
-PG.QValue (Run-Wise)
-PG.IsSingleHit
+- KNN imputation uses three nearest neighbors.
+- Differential testing uses Welch's unequal-variance t-test.
+- Fold change is calculated as the difference between group means after log2 transformation.
+- Enrichment queries are separated into upregulated and downregulated gene lists.
 
-Dependencies
-streamlit
-pandas
-numpy
-scipy
-scikit-learn
-plotly
-gprofiler-official
+## Limitations
 
-👨‍🔬 Author
-Jahanbakhsh Ghasemi
-Ph.D. Candidate, University of Connecticut (2025)
+This is an exploratory analysis tool, not a validated clinical pipeline. The current differential analysis does not apply multiple-testing correction, and PCA is run on the imputed matrix without feature standardization. Input schema validation and automated tests are not yet included. Pathway enrichment requires network access to g:Profiler.
+
+## Repository structure
+
+```text
+.
+├── app.py
+├── requirements.txt
+└── README.md
+```
