@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6,7 +8,6 @@ import plotly.graph_objects as go
 from scipy import stats
 from sklearn.impute import KNNImputer
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 from gprofiler import GProfiler
 
 # -----------------------------------------------------------------------------
@@ -93,8 +94,8 @@ DEFAULT_PATH = r"D:\Project\Mohan\Jen\Software\20250728_112202_20250728_RMohan_m
 # -----------------------------------------------------------------------------
 # MAIN LOGIC
 # -----------------------------------------------------------------------------
-st.title("🧬 Jahan BioOmics: Advanced Proteomics Suite")
-st.markdown("### Interactive AI-Driven Analysis & Pathway Discovery")
+st.title("Jahan BioOmics")
+st.markdown("Interactive proteomics analysis and pathway discovery")
 
 df = None
 if uploaded_file is not None:
@@ -102,9 +103,14 @@ if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         if df.shape[1] < 2: uploaded_file.seek(0); df = pd.read_csv(uploaded_file, sep='\t')
     except: st.error("Could not read file.")
+elif DEFAULT_PATH:
+    try:
+        df = pd.read_csv(DEFAULT_PATH)
+        st.success("Loaded the configured local dataset.")
+    except Exception:
+        st.warning("Could not read BIOOMICS_DEFAULT_DATA. Upload a file instead.")
 else:
-    try: df = pd.read_csv(DEFAULT_PATH); st.success("Loaded default local dataset (Dev Mode).")
-    except: st.info("Waiting for file upload...")
+    st.info("Waiting for file upload...")
 
 if df is not None:
     # --- STEP 1: QC ---
@@ -127,7 +133,7 @@ if df is not None:
         expression_data = df_pivot.values
         sample_names = df_pivot.columns.tolist()
 
-        tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 QC & Overview", "🤖 AI Imputation", "🔍 PCA & Heatmap", "🌋 Differential Analysis", "🧬 Biological Pathways"])
+        tab1, tab2, tab3, tab4, tab5 = st.tabs(["QC & Overview", "Imputation", "PCA & Correlation", "Differential Analysis", "Pathway Enrichment"])
 
         with tab1:
             c1, c2, c3 = st.columns(3)
@@ -139,14 +145,14 @@ if df is not None:
             with col_opts:
                 st.markdown("**1. Log2 Transformation**")
                 with np.errstate(divide='ignore'): data_log = np.log2(expression_data); data_log[np.isinf(data_log)] = np.nan
-                imp_method = st.radio("Method:", ["✨ AI-based (KNN)", "Min Value", "Zero Fill"])
+                imp_method = st.radio("Method:", ["KNN", "Min Value", "Zero Fill"])
             
             df_imputed = pd.DataFrame(data_log, columns=sample_names, index=df_pivot.index)
-            if imp_method == "✨ AI-based (KNN)":
-                with st.spinner("Running AI Model..."):
+            if imp_method == "KNN":
+                with st.spinner("Running KNN imputation..."):
                     imputer = KNNImputer(n_neighbors=3)
                     df_final = pd.DataFrame(imputer.fit_transform(df_imputed), columns=sample_names, index=df_pivot.index)
-                    st.success("AI Imputation Complete.")
+                    st.success("KNN imputation complete.")
             elif imp_method == "Min Value":
                 df_final = df_imputed.fillna(np.nanmin(data_log)); st.warning("Imputed with Min.")
             else:
@@ -208,7 +214,7 @@ if df is not None:
             st.download_button(label="📥 Download CSV", data=csv, file_name='Significant_Proteins.csv', mime='text/csv')
 
         with tab5:
-            st.subheader("🤖 Automated Biological Interpretation")
+            st.subheader("Pathway Enrichment")
             if 'stats_result' in st.session_state:
                 res_df = st.session_state['stats_result']
                 up_genes = res_df[res_df['Category'] == 'Upregulated']['PG.Genes'].dropna().unique().tolist()
